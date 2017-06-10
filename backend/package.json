@@ -1,0 +1,17 @@
+{
+  "name": "maps-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nf run nodemon server",
+    "start": "nf start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/maps": "0.4.0",
+    "body-parser": "1.17.2",
+    "express": "4.15.3"
+  }
+}

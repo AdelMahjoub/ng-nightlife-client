@@ -1,0 +1,55 @@
+<!-- Home CONTAINER -->
+<div class="container" [@pageOpen]>
+
+  <div class="row">
+    <div class="col-xs-12 col-md-8 col-md-offset-2">
+      <!-- Heading -->
+      <div class="page-header text-center">
+        <h1>{{'Let\'s see what\'s nearby'}}</h1>
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <div class="row">
+
+            <div class="col-xs-12 col-md-10">
+              <!-- location input field -->
+              <input 
+                type="text" 
+                class="form-control"
+                placeholder="your position or your destination"
+                name="address"
+                [(ngModel)]="address">
+            </div>
+
+            <!-- xs horizontal line -->
+            <div class="col-xs-12 visible-xs">
+              <hr>
+            </div>
+
+            <div class="col-xs-12 col-md-2 text-center">
+              <!-- try get user location button -->
+              <button 
+                type="button"
+                class="btn btn-primary"
+                title="get my current position"
+                (click)="tryGetGeolocation()"><i class="fa fa-location-arrow"></i></button>
+              <!-- submit button -->
+              <button 
+                type="submit"
+                class="btn btn-success"
+                title="go"><i class="fa fa-check"></i></button>
+            </div>
+
+            <!-- horizontal line -->
+            <div class="col-xs-12 col-md-12">
+              <hr>
+            </div>
+
+          </div><!-- end of form group row-->
+        </div><!-- end of form group -->
+      </form>
+    </div>
+  </div>
+  
+</div>
