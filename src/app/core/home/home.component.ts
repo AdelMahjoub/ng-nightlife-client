@@ -42,6 +42,8 @@ export class HomeComponent implements OnInit{
   userLocation: UserLocation;
 
   address = '';
+  placesLoading = false;
+
 
   constructor(
     private locationService: LocationService,
@@ -114,7 +116,12 @@ export class HomeComponent implements OnInit{
   onSubmit() {
     if(this.address) {
       this.locationService.setUserAddress(this.address);
+      this.placesLoading = true;
       this.router.navigate(['places']);
     }
+  }
+
+  ngOnDestroy() {
+    this.placesLoading = false;
   }
 }
