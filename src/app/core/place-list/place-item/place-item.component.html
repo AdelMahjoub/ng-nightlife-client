@@ -1,53 +1,74 @@
 <div class="row">
+
   <div class="col-xs-12 col-md-8 col-md-offset-2">
-    
+
     <div class="panel panel-default">
+
       <div class="panel-heading">
         <h3 class="panel-title">
-          <img 
-            [src]="place.icon" 
-            alt="establishment icon"
-            class="pull-right" 
-            width="16" 
-            height="16">
           {{place.name}}
         </h3>
       </div>
+
       <div class="panel-body">
         <div class="col-md-4 col-sm-4 col-xs-12">
           <img 
-            [src]="photoUrl" 
+            style="width: 100%"
+            [src]="place.image_url ? place.image_url : imagePlaceHolder" 
             alt="place's photo" 
-            class="img-thumbnail profile-img"
-            style="width: 150px; height: 150px">
+            class="img-responsive img-thumbnail">
         </div>
-        <div class="col-md-8 col-sm-8 col-xs-12">
-          <p>
-            <span class="label label-primary">{{place.types[0] }}</span>
-            <span class="label label-info">{{place.types[1] }}</span>
-            <span class="label label-success">{{place.types[2] }}</span>
-          </p>
-          <p><strong>{{place.vicinity}}</strong></p>
-          <p>
-            <span *ngFor="let value of stars">
-              <i [class]="'fa fa-'+value"></i>
-            </span>
-          </p>
-          <p>
-            {{openStatus}}
-          </p>
-          <button 
-              type="button"
-              class="btn btn-default btn-block">Go</button>
-        </div>
-      </div>
-      <div class="panel-footer">
-        <span class="label label-warning">0 going </span>
-      </div>
-    </div>
 
-  </div>
+        <div class="col-md-8 col-sm-8 col-xs-12">
+           <p>
+            <ng-container *ngFor="let tag of place.categories" >
+              <span class="label label-info">{{ tag.alias}}</span>
+            </ng-container>
+          </p>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <p><strong>{{address}}</strong></p>
+            </li>
+            <li 
+              class="list-group-item"
+              *ngIf="place.display_phone !== ''">
+              <p><span><i class="fa fa-phone"></i> {{ place.display_phone}}</span><p>
+            </li>
+            <li class="list-group-item">
+              <p>{{ place.distance | distance}} Km</p>
+            </li>
+            <li class="list-group-item">
+              <p [innerText]="place.is_closed ? 'Closed' : 'Open'"></p>
+            </li>
+            <li class="list-group-item">
+              <a [href]="place.url" target="_blank" style="text-decoration: none;">
+                <img [src]="ratingSrc" alt="yelp-rating" style="display: inline-block;">
+                <img 
+                  style="display: inline-block;padding-bottom: 5px;"
+                  src="assets/Yelp_trademark_RGB_outline.png" 
+                  class="img-responsive" 
+                  alt="yelp-logo"
+                  width="64"
+                  heigh="64">
+              </a><br>
+              <span style="color: #999;">Based on {{place.review_count}} Reviews</span>
+            </li>
+            <hr>
+            <button 
+                type="button"
+                class="btn btn-success btn-block"
+                (click)="onGo()">Going ({{ place.going }})</button>
+          </ul>
+        </div>
+      </div><!-- END OF PANEL BODY-->
+
+    </div><!-- END OF PANEL -->
+
+  </div><!-- END OF PLACE-ITEM COL -->
+
+  <!-- horizontal line / place-items separator -->
   <div class="col-xs-12 col-md-8 col-md-offset-2">
     <hr>
   </div>
-</div>
+
+</div><!-- END OF PLACE-ITEM ROW -->

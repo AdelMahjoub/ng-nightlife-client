@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 import { LocationService } from './../../../services/location.service';
 import { Component, OnInit, Input } from '@angular/core';
 
@@ -9,33 +11,58 @@ import { Component, OnInit, Input } from '@angular/core';
 export class PlaceItemComponent implements OnInit {
 
   @Input() place: any;
-  photoUrl = 'http://via.placeholder.com/150x150';
+  imagePlaceHolder = 'http://via.placeholder.com/150x150';
   stars = [];
-  openStatus: string;
+  address: any;
+  ratingSrc: string;
 
-  constructor(private locationService: LocationService) { }
+  constructor(
+    private locationService: LocationService,
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit() {
-    if(this.place && this.place['photos']) {
-      let photoReference = this.place.photos[0].photo_reference;
-      this.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxheight=5000&maxwidth=5000&photoreference=${photoReference}&key=AIzaSyDiIapoZr7abGJRKsih4agnN7ks8xoC0cQ`;
-    } 
-    if(this.place && this.place['rating']) this.makeStars();
-    if(this.place && this.place.opening_hours) {
-      this.openStatus = this.place.opening_hours.open_now ? 'Open' : 'Close';
-    } else {
-      this.openStatus = 'Can\'t tell if it\'s open or close.';
-    }
-    console.log(this.place);
+    this.address = this.place.location.display_address.map(chunk => chunk + ' ').join('');
+    this.makeStars();
   }
 
   makeStars() {
     let rating = this.place.rating;
-    let i = 0;
-    while(i < rating) {
-      if((rating - i) >= 1) this.stars.push('star');
-      else this.stars.push('star-half-o');
-      i++;
-    }
+    this.ratingSrc = 'assets/regular_0.png'; 
+    // let i = 0;
+    // while(i < rating) {
+    //   if((rating - i) >= 1) this.stars.push('star');
+    //   else this.stars.push('star-half-o');
+    //   i++;
+    // }
+    if(rating === 5) this.ratingSrc = 'assets/regular_5.png';
+    if(rating === 4) this.ratingSrc = 'assets/regular_4.png';
+    if(rating === 3) this.ratingSrc = 'assets/regular_3.png';
+    if(rating === 2) this.ratingSrc = 'assets/regular_2.png';
+    if(rating === 1) this.ratingSrc = 'assets/regular_1.png';
+    if(rating < 5 && rating > 4) this.ratingSrc = '/assets/regular_4_half.png';
+    if(rating < 4 && rating > 3) this.ratingSrc = '/assets/regular_3_half.png';
+    if(rating < 3 && rating > 2) this.ratingSrc = '/assets/regular_2_half.png';
+    if(rating < 2 && rating > 1) this.ratingSrc = '/assets/regular_1_half.png';
+  }
+
+  onGo() {
+    let userId = this.authService.getUserIdFromStorage();
+    let placeId = this.place.id;
+    this.authService.isAuthenticated()
+      .subscribe(
+        (authenticated) => {
+          if(!authenticated) this.router.navigate(['login']);
+          else {
+            this.locationService.update(userId, placeId)
+              .subscribe(
+                (response: {going: number}) => {
+                  this.place.going = response.going;
+                  this.locationService.updateLocalStorage(this.place.id, this.place.going)
+                }
+              )
+          }
+        }
+      )
   }
 }

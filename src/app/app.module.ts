@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
 import { LocationService } from './services/location.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,6 +16,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     HttpModule,
     CoreModule,
+    AuthModule,
     BrowserAnimationsModule
   ],
   providers: [],

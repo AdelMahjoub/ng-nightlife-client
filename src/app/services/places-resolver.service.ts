@@ -16,7 +16,7 @@ export class PlacesResolverService implements Resolve<any>{
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any> | Promise<any> {
-      let places = this.locationService.getPlaces();
+      let places = this.locationService.getPlacesFromStorage();
       if(places) return places;
       else return this.locationService.getPlacesByAddress(); }
 }

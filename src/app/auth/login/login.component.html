@@ -1,0 +1,67 @@
+<div class="container" [@slideUp]>
+  
+  <!-- server validation errors -->
+  <div class="row" *ngIf="serverValidationErrors.length > 0">
+    <div class="col-xs-12 col-md-8 col-md-offset-2">
+      <div class="alert alert-danger">
+        <p *ngFor="let error of serverValidationErrors">{{error}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!--signup form-->
+  <div class="row">
+    <div class="col-xs-12 col-md-8 col-md-offset-2">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <!-- email field -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              id="email"
+              type="email" 
+              class="form-control"
+              [formControlName]="'email'">
+            <div class="error">
+              <ng-template [ngIf]="email.invalid && email.touched">
+                <span *ngIf="email.errors['required']">The email is requied.</span>
+                <span *ngIf="email.errors['email'] && !email.errors['required']">This email is not valid.</span>
+              </ng-template>
+            </div>
+        </div>
+        <!-- password field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password" 
+            type="password" 
+            class="form-control"
+            [formControlName]="'password'">
+          <div class="error">
+            <ng-template [ngIf]="password.invalid && password.touched">
+              <span *ngIf="password.errors['required']">The password is requied.</span>
+              <span *ngIf="password.errors['minlength'] && !password.errors['required']">Password minimum length 6 characters.</span>
+            </ng-template>
+          </div>
+        </div>
+    
+        <!-- buttons field -->
+        <div class="form-group pull-right">
+          <button
+            type="button" 
+            class="btn btn-default"
+            (click)="onReset()"
+            [disabled]="loginForm.pristine">Reset</button>
+          <button 
+            type="submit"
+            class="btn btn-success"
+            [disabled]="loginForm.invalid">Login</button>
+        </div>
+        
+        <!-- register invite -->
+        <div class="div form-group pull-left">
+          <em>Don't have an account ? </em><a [routerLink]="'/signup'"><em>Register</em></a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

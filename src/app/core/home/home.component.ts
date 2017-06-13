@@ -34,6 +34,22 @@ import { UserLocation } from '../../models/user-location.model';
         }),
         animate(300)
       ])
+    ]),
+    trigger('notify', [
+      state('coming', style({
+        opacity: 0,
+        transform: 'translateX(-200px)'
+      })),
+      state('in', style({
+        opacity: 1,
+        transform: 'translateX(0)'
+      })),
+      state('out', style({
+        opacity: 0,
+        transform: 'translateX(200px)'
+      })),
+      transition('coming => in', animate(500)),
+      transition('in => out', animate(500))
     ])
   ]
 })
@@ -41,9 +57,10 @@ export class HomeComponent implements OnInit{
 
   userLocation: UserLocation;
 
-  address = '';
-  placesLoading = false;
-
+  address       = '';
+  placesLoading = false;   // Loading spinner trigger
+  infoMessage   = '';      // Feedbacks for user
+  infoAnimState = 'coming';
 
   constructor(
     private locationService: LocationService,
@@ -62,15 +79,8 @@ export class HomeComponent implements OnInit{
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this.getGeoLocation.bind(this), this.getGelocError.bind(this))
     } else {
-      this.userLocation = new UserLocation(null);
-      this.locationService.getUserAddress(this.userLocation)
-      .subscribe(
-        (data: {address: string, placeId: string}) => {
-          if(data.address !== '') {
-            this.address = data.address;
-          }
-        }
-      )
+      this.infoMessage = 'Geolocation is not supported';
+      this.notify();    
     }
   }
 
@@ -98,16 +108,8 @@ export class HomeComponent implements OnInit{
    * @param res 
    */
   getGelocError(res: PositionError): void {
-    this.userLocation = new UserLocation(res);
-
-    this.locationService.getUserAddress(this.userLocation)
-      .subscribe(
-        (data: {address: string, placeId: string}) => {
-          if(data.address !== '') {
-            this.address = data.address;
-          }
-        }
-      )
+    this.infoMessage = 'Geolocation is deactivated';
+    this.notify();
   }
 
   /**
@@ -123,5 +125,15 @@ export class HomeComponent implements OnInit{
 
   ngOnDestroy() {
     this.placesLoading = false;
+  }
+
+  notify() {
+    this.infoAnimState = 'in';
+    setTimeout(() => {
+      this.infoAnimState = 'out';
+      setTimeout(() => {
+        this.infoAnimState = 'coming';
+      }, 510)
+    }, 2000)
   }
 }

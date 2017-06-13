@@ -1,5 +1,10 @@
-import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { 
+  Component, 
+  OnInit } from '@angular/core';
+
+import { 
+  ActivatedRoute, 
+  Data } from '@angular/router';
 
 @Component({
   selector: 'app-place-list',
@@ -14,8 +19,9 @@ export class PlaceListComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(
-      (data) => {
+      (data: Data) => {
         this.places = data['places'];
+        console.log(this.places)
       }
     )
   }

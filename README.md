@@ -2,9 +2,17 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
 
-## Development server
+## Backend server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Download or clone the (backend api)[https://github.com/AdelMahjoub/ng-nightlife-coordination-app] to test.
+
+Once downloaded or cloned, and after installing the dependencies. Start the backend with `npm run dev` or `npm start`.  
+
+## Client Development server
+
+The development server is proxied to `http://localhost:3000/api`. Start the backend server at this port to communicate with the app.
+
+Run `npm start` for a client dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 

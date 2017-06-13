@@ -1,6 +1,8 @@
+import { AuthService } from './auth.service';
+import { ApiEndPointService } from './api-endpoint.service';
 import { UserLocation } from './../models/user-location.model';
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -8,15 +10,16 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class LocationService {
   
-  baseUrl = '/api';
+  baseUrl: string;
   address = '';
   
-  constructor(private http: Http) { }
+  constructor(
+    private http: Http,
+    private apiEndPonit: ApiEndPointService,
+    private authService: AuthService) { 
+      this.baseUrl = apiEndPonit.getUrl();
+  }
   
-  /**
-   * 
-   * @param userLoaction 
-   */
   getUserAddress(userLoaction: UserLocation): Observable<any> {
     return this.http.post(`${this.baseUrl}/location`, userLoaction)
       .map(
@@ -26,69 +29,61 @@ export class LocationService {
       )
   }
 
-  /**
-   * get places from server and store them in local storage
-   */
   getPlacesByAddress(): Observable<any> {
     return this.http.post(`${this.baseUrl}/places-by-address`, {address: this.getAddressFromStorage()})
       .map(
         (response: Response) => {
-          this.storePlaces(JSON.stringify(response.json().places));
-          return response.json().places;
+          this.storePlaces(response.json().businesses);
+          return response.json().businesses;
         }
       )
   }
 
-  /**
-   * Store address in localStorage
-   * Clear previous places
-   * @param address 
-   */
   setUserAddress(address: string): void {
     this.address = address;
     this.clearPlaces();
     localStorage.setItem('address', this.address);
   }
 
-  /**
-   * return address stored in localstorage
-   */
   getAddressFromStorage(): string | null{
     return localStorage.getItem('address');
   }
 
-  /**
-   * Store places in local storage
-   * @param places 
-   */
   storePlaces(places: any): void {
-    localStorage.setItem('places',  places);
+    localStorage.setItem('places', (JSON.stringify(places)));
   }
 
-  /**
-   * return places stored in local storage
-   */
-  getPlaces(): any {
+  getPlacesFromStorage(): any {
     return JSON.parse(localStorage.getItem('places'));
   }
 
-
-  /**
-   * 
-   */
   clearPlaces(): void {
     localStorage.removeItem('places');
   }
 
-  /**
-   * 
-   * @param photoRef 
-   */
-  getPlacePhoto(photoRef: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/place-photo`, {photoRef})
-      .map((response: Response) => {
-        return response.json();
-      })
+  update(userId: string, placeId: string): Observable<any> {
+    const auth = 'Bearer ' + this.authService.getTokenFromStorage();
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', auth);
+    const options = new RequestOptions({ headers });
+    return this.http.post(`${this.baseUrl}/update`, {userId, placeId}, options)
+      .map(
+        (response: Response) => {
+          return response.json();
+        }
+      )
+  }
+
+  updateLocalStorage(placeId: string, going: number): void {
+    let places = this.getPlacesFromStorage();
+    places = places.map(place => {
+      if(place.id === placeId) {
+        place.going = going;
+      }
+      return place;
+    });
+    this.storePlaces(places);
   }
 
 }

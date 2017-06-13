@@ -2,10 +2,22 @@
   <!-- NAVBAR -->
   <div class="page-header"></div>
     <nav class="navbar navbar-inverse" role="navigation">
-      <div class="container">
-        <a 
-          class="navbar-brand" 
-          [routerLink]="['']">{{'night life' | titlecase}}</a>
+      <div class="container-fluid">
+          <div class="navbar-header">
+          
+          <a 
+            class="navbar-brand" 
+            [routerLink]="['']">{{'Let\'s Go' }}</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <ng-template [ngIf]="isAuthenticated">
+            <li><a style="cursor: pointer;" (click)="onLogout()">Logout</a></li>
+          </ng-template>
+          <ng-template [ngIf]="!isAuthenticated">
+            <li><a [routerLink]="['signup']">Signup</a></li>
+            <li><a [routerLink]="['login']">Login</a></li>
+          </ng-template>
+        </ul>
       </div>
     </nav>
   <div class="page-header"></div>
