@@ -35,7 +35,7 @@
               <p><span><i class="fa fa-phone"></i> {{ place.display_phone}}</span><p>
             </li>
             <li class="list-group-item">
-              <p>{{ place.distance | distance}} Km</p>
+              <p>{{ place.distance | distance}}</p>
             </li>
             <li class="list-group-item">
               <p [innerText]="place.is_closed ? 'Closed' : 'Open'"></p>
