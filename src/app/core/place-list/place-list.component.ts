@@ -21,7 +21,6 @@ export class PlaceListComponent implements OnInit {
     this.route.data.subscribe(
       (data: Data) => {
         this.places = data['places'];
-        console.log(this.places)
       }
     )
   }
